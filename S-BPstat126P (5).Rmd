@@ -1,5 +1,5 @@
 ---
-title: "Concrete Compressive Sterngth Evaluation"
+title: "Concrete Compressive Strength Evaluation"
 author: "Tanar Hernandez-Wroblewski"
 date: "September 14th, 2019"
 output:
