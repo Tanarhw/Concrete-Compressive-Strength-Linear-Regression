@@ -1,0 +1,119 @@
+---
+title: "Concrete Compressive Sterngth Evaluation"
+author: "Tanar Hernandez-Wroblewski"
+date: "September 14th, 2019"
+output:
+  pdf_document
+---
+\clearpage
+
+##Abstract
+In this project we will be analyzing two different datasets with the aim to produce a linear regression model that will aid our inquiry about the realtionship between fixed and relevant variables in the respective datasets. The first dataset pertains to Wine Quality. Here we are interested in:
+* Which variable, amongst the ones we are testing, influences alcohol percentage the most?
+* How / does this differ from red to white wine?
+[Findings on Wine Qulaity dataset]
+
+Next, we turn our attention to the Concrete Compressive Strength dataset. Where our foucs is to find:
+* What are the relevant contributing components towards the Compressive Strength of Concrete?
+[Findings on Concrete Compressive Strenght dataset]
+
+##Problem and Motivation
+Within the Alcohol in Wine regression we work with two datasets that are related to red and white variants of the Portuguese "Vinho Verde" wine. There are several components that make wines taste as well as they do; amongst them is of course alcohol. Wine is not sought after in the same manner that alcohol beverages are, however, there are chemicals in wine that can elevate the percentage of alcohol concentration. In this project we wish to understand the effect that certain chemicals in wine have on the alcohol concentration and make note of their varying effects from white to red wine. The variables present in the dataset contribute to preservation, taste, oxidation, smell, and color of the product. With this in mind, regression will allow us to make inferences about wine beyond the straighforward numeric value produced by its concentration of alcohol. As well as the opportunity to outline differences across the two variants; white and red "Vinho Verde" wine.
+
+Moreover, [Motivation of Compressive Strength TBD]
+
+
+##Questions of Interest
+With respect to the Wine Quality Dataset:
+* Which chemical has the greatest effect on the alcohol percentage of concentration?
+* How does the effect of this chemical differ from red to white wine?
+
+and the Concrete Compressive Strength Dataset:
+* What components constitute the best linear model test for Compressive Strength?
+
+##Data
+The Wine Quality dataset conatins two datasets that are related to red and white variants of the Portuguese "Vinho Verde" wine. We respresent the data as follows:
+Alcohol: % of alcohol concentration
+FAcid: fixed acidity
+VAcid: volatile acidity
+CAcid: citric acid
+RSugar: residual sugar (grams/L)
+Chloride: % of chlorides concentration
+FSD: free sulfur dioxide (ml/L)
+TSD: total sulfur dioxide (ml/L)
+Density: density
+pH: value on pH scale
+Sulphates: sulphates
+
+And our next dataset includes data gathered from Cheng Yehs', "Modeling of strength of high performance concrete using artificial neural networks," Cement and Concrete Research. We list the components as follows:
+X1: Cement (kg in a m3 mixture)
+X2: Blast Furnace Slag (kg in a m3 mixture)
+X3: Fly Ash (kg in a m3 mixture)
+X4: Water (kg in a m3 mixture)
+X5: Superplasticizer (kg in a m3 mixture)
+X6: Coarse Aggregate (kg in a m3 mixture)
+X7: Fine Aggregate (kg in a m3 mixture)
+X8: Age (Day (1~365))
+Y: Concrete compressive strength (MPa)
+
+##Regression Methods
+[IP]
+
+##Regression Analysis, Reuslts, and Interpretation
+[IP]
+```{r}
+# Concrete Compressive Strength
+# We fit a model with all of the available componenets and assess what we are working with
+model1 <- lm(Y~X1+X2+X3+X4+X5+X6+X7+X8)
+# The respective p-values of X6 and X7 seem to be inadequate at a signifance level of .05. However we run a partial F test just to make sure.
+model2 <- lm(Y~X1+X2+X3+X4+X5+X8)
+anova(model2, model1)
+```
+From the anova table we can deduce that for the hypothesis test H0: beta6 = beta7 = 0 vs HA: not H0 ; the null hypothesis is accepted at all significance levels such that the p-value is less than .1 / .05. We can quickly assert that our new model2 is the best by looking at the summary statistics for it. We note an insignificant loss of explainable variablilty from model1 to model2 and thus conclude that we may proceed with confidence in our model
+```{r}
+summary(model2)
+# differerence in R^2 from model1 to model2 is around .001
+```
+Now we can move forward and start preparing our data for proper analysis. To make sure it alligns with the required diagnostics
+*Linearity
+*Normality
+*Independece
+*Constant Variance
+we assess Residuals vs Fitted, Q-Q, and sqrt(standardized residuals) vs fitted values plots to aid in this aspect.
+```{r}
+par(mfrow=c(1,3))
+plot(model2, which = 1:3)
+```
+The data is never perfect, however, from the plots we can assert several aspects about our data. In the Residuals vs Fitted plot we see that our data points(regression line) more or less stay consistent with our dotted line at the horizontal axis, signifying linearity. We discuss the aspect of variance in the scale-Location plot, but we can already spot a constant trend as our data experiences a slight uptike as the predicted values increase. In the Q-Q plot we see a proper trend along a 45 degree line for the majority of the entries. Which signifies a normal distribution throughout the majority of our data. [scale-location analysis IP]
+```{r}
+# Prediction Interval
+summary(Concrete_Data)
+```
+Now that we have a proper model at our disposal we use it note the difference that slightly above average concentration of cement and superplastizer mixture along with age can have on the Compressive Strenght; when we hold all other accompanying variable in our model constant. For a proper comparison we set all variables that are not uniquely defined to the mean of that respective componenet so as to illustrate the effect of the uniquely defined components
+```{r}
+tester1 <- data.frame(X1=mean(X1), X2=mean(X2), X3=mean(X3), X4=mean(X4), X5=mean(X5), X8=mean(X8))
+tester2 <- data.frame(X1=400, X2=mean(X2), X3=mean(X3), X4=mean(X4), X5=15, X8=50)
+ans1$fit
+ans2$fit
+```
+With the average concentrations of each component we report that we are 95% certain that this will produce a Compressive Strength in the range of (15.38, 56.25) (specifically 35.8). And with the same percentage of certainty we report that with slightly above average values of components of Cement, Superplaticizer, and Age we will have a Compressive Strength in the region of (30.46, 71.43).
+##Conclusion
+[IP]
+
+##Apendicies
+[IP]
+# Wine Quality
+
+
+```{r}
+# Concrete Compressive Strength
+Y <- `Concrete compressive strength(MPa, megapascals)`
+X1 <- `Cement (component 1)(kg in a m^3 mixture)`
+X2 <- `Blast Furnace Slag (component 2)(kg in a m^3 mixture)`
+X3 <- `Fly Ash (component 3)(kg in a m^3 mixture)`
+X4 <- `Water  (component 4)(kg in a m^3 mixture)`
+X5 <- `Superplasticizer (component 5)(kg in a m^3 mixture)`
+X6 <- `Coarse Aggregate  (component 6)(kg in a m^3 mixture)`
+X7 <- `Fine Aggregate (component 7)(kg in a m^3 mixture)`
+X8 <- `Age (day)`
+```
